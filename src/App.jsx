@@ -27,31 +27,32 @@ export default function App() {
   return (
     <Layout>
       {/* Header */}
-      
-        <div className="mb-6">
-          <h1
-            className="text-3xl font-extrabold flex items-center gap-2 tracking-tight"
-            style={{ textShadow: "0 1px 2px rgba(0,0,0,0.15)" }}
-          >
-            <span role="img" aria-label="globe">
-              🌍
-            </span>
-            <span>Global EV Readiness & Gap Dashboard (2025)</span>
-          </h1>
-          <p className="mt-2 text-sm text-slate-700 max-w-3xl">
-            This dashboard summarizes the EV infrastructure readiness index (EIRI),
-            EV model availability, and the gap between demand and infrastructure.
-            Click a country on the map or in the charts to see its detailed profile.
-          </p>
-        </div>
+      <div className="mb-6">
+        <h1
+          className="text-3xl font-extrabold flex items-center gap-2 tracking-tight"
+          style={{ textShadow: "0 1px 2px rgba(0,0,0,0.15)" }}
+        >
+          <span role="img" aria-label="globe">
+            🌍
+          </span>
+          <span>Global EV Readiness &amp; Gap Dashboard (2025)</span>
+        </h1>
+        <p className="mt-2 text-sm text-slate-700 max-w-3xl">
+          This dashboard summarizes the EV infrastructure readiness index (EIRI),
+          EV model availability, and the gap between demand and infrastructure.
+          Click a country on the map or in the charts to see its detailed profile.
+        </p>
+      </div>
 
-
-      {/* Main layout: left = visuals, right = country detail */}
+      {/* Main layout: left = map + charts, right = details */}
       <div className="flex flex-col lg:flex-row gap-4">
         {/* LEFT: map + charts */}
         <div className="flex-1 space-y-4">
+          {/* Map card */}
           <div className="bg-white rounded-xl shadow p-4">
-            <h2 className="font-semibold mb-2">Global Readiness Map</h2>
+            <h2 className="font-semibold mb-2">
+              Global EV Readiness Map (EIRI)
+            </h2>
             <div style={{ height: 380 }}>
               <MapView data={data} onSelectCountry={setSelectedCode} />
             </div>
@@ -66,12 +67,13 @@ export default function App() {
             </p>
           </div>
 
+          {/* Charts card */}
           <div className="bg-white rounded-xl shadow p-4">
             <Charts data={data} onSelectCountry={setSelectedCode} />
           </div>
         </div>
 
-        {/* RIGHT: sticky country details */}
+        {/* RIGHT: country details */}
         <div className="w-full lg:w-80 xl:w-96 lg:sticky lg:top-4 self-start">
           <CountryDetail country={selectedCountry} />
         </div>
