@@ -27,7 +27,7 @@ export default function App() {
   return (
     <Layout>
       {/* Header */}
-      // inside <Layout> ... return ( ... )
+      
         <div className="mb-6">
           <h1
             className="text-3xl font-extrabold flex items-center gap-2 tracking-tight"
