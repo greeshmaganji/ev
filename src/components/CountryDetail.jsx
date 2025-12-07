@@ -1,93 +1,81 @@
 // src/components/CountryDetail.jsx
 import React from "react";
 
-function gapLabel(gap) {
-  if (gap == null) return "N/A";
-  if (gap > 10) return "Demand ahead of infrastructure";
-  if (gap < -10) return "Infrastructure ahead of demand";
-  return "Roughly balanced";
-}
-
-function clusterLabel(cluster) {
-  if (cluster === 0) return "Cluster 0 – Emerging";
-  if (cluster === 1) return "Cluster 1 – Leaders";
-  if (cluster === 2) return "Cluster 2 – Moderate";
-  if (cluster === 3) return "Cluster 3 – Lagging";
-  return "Unknown cluster";
+function formatNumber(x) {
+  if (x == null || isNaN(x)) return "N/A";
+  return x.toLocaleString(undefined, { maximumFractionDigits: 1 });
 }
 
 export default function CountryDetail({ country }) {
+  // Nothing selected yet
   if (!country) {
     return (
-      <div className="rounded-xl bg-white shadow p-4 h-full">
+      <div className="rounded-xl bg-white shadow p-4 text-sm text-gray-700">
         <h2 className="text-lg font-semibold mb-2">Country Details</h2>
-        <p className="text-sm text-gray-600 mb-2">
-          Select a country from the map or a bar in the charts to see its EV
-          readiness, EV model availability, and gap analysis.
+        <p className="mb-2">
+          Select a country on the map or in a chart to see its EV readiness
+          profile:
         </p>
-        <ul className="text-xs text-gray-500 list-disc list-inside">
-          <li>EIRI: composite index of coverage, capacity, fast charging, and EV models.</li>
-          <li>Positive gap: demand (models) is ahead of infrastructure.</li>
-          <li>Negative gap: infrastructure is ahead of model availability.</li>
+        <ul className="list-disc list-inside space-y-1">
+          <li>
+            <b>EIRI</b>: composite EV infrastructure readiness index
+            (coverage, capacity, fast charging, models).
+          </li>
+          <li>
+            <b>Gap</b>: availability − readiness. Positive = demand ahead of
+            infrastructure, negative = infrastructure ahead of models.
+          </li>
+          <li>
+            <b>Fast charger share</b>: share of DC fast / ultra-fast ports.
+          </li>
         </ul>
       </div>
     );
   }
 
+  // We have a selected country row from App.jsx
+  const name = country.country || country.country_code;
+
   return (
-    <div className="rounded-xl bg-white shadow p-4 h-full">
-      <h2 className="text-lg font-semibold mb-1">
-        {country.country} ({country.country_code})
-      </h2>
+    <div className="rounded-xl bg-white shadow p-4 text-sm text-gray-800">
+      <h2 className="text-lg font-semibold mb-1">{name}</h2>
       <p className="text-xs text-gray-500 mb-3">
-        {clusterLabel(country.cluster)}
+        Code: {country.country_code}
       </p>
 
-      <div className="grid grid-cols-2 gap-3 text-sm mb-4">
-        <div>
-          <div className="text-xs text-gray-500">EIRI</div>
-          <div className="text-xl font-semibold">
-            {country.EIRI?.toFixed(1) ?? "N/A"}
-          </div>
+      <div className="space-y-2">
+        <div className="flex justify-between">
+          <span className="font-medium">EIRI score</span>
+          <span>{formatNumber(country.EIRI)}</span>
         </div>
-        <div>
-          <div className="text-xs text-gray-500">Gap</div>
-          <div className="text-xl font-semibold">
-            {country.gap_value?.toFixed(1) ?? "N/A"}
-          </div>
-          <div className="text-xs text-gray-500">
-            {gapLabel(country.gap_value)}
-          </div>
+        <div className="flex justify-between">
+          <span className="font-medium">Gap (availability − readiness)</span>
+          <span>{formatNumber(country.gap_value)}</span>
         </div>
-        <div>
-          <div className="text-xs text-gray-500">Stations</div>
-          <div>{country.stations ?? "N/A"}</div>
+        <div className="flex justify-between">
+          <span className="font-medium">Charging stations</span>
+          <span>{country.stations ?? "N/A"}</span>
         </div>
-        <div>
-          <div className="text-xs text-gray-500">Unique EV Models</div>
-          <div>{country.unique_models ?? "N/A"}</div>
+        <div className="flex justify-between">
+          <span className="font-medium">EV models available</span>
+          <span>{country.unique_models ?? "N/A"}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-medium">Fast charger share (norm)</span>
+          <span>{formatNumber(country.fastshare_norm)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="font-medium">Capacity index (norm)</span>
+          <span>{formatNumber(country.capacity_norm)}</span>
         </div>
       </div>
 
-      <h3 className="text-sm font-semibold mb-1">Index Components</h3>
-      <ul className="text-xs text-gray-600 space-y-1">
-        <li>
-          <span className="font-semibold">Coverage:</span>{" "}
-          {country.coverage_norm?.toFixed(1) ?? "N/A"}
-        </li>
-        <li>
-          <span className="font-semibold">Capacity:</span>{" "}
-          {country.capacity_norm?.toFixed(1) ?? "N/A"}
-        </li>
-        <li>
-          <span className="font-semibold">Fast charging:</span>{" "}
-          {country.fastshare_norm?.toFixed(1) ?? "N/A"}
-        </li>
-        <li>
-          <span className="font-semibold">Availability:</span>{" "}
-          {country.availability_norm?.toFixed(1) ?? "N/A"}
-        </li>
-      </ul>
+      {country.cluster != null && (
+        <p className="mt-3 text-xs text-gray-600">
+          Cluster: <b>{country.cluster}</b> (data-driven grouping of similar
+          readiness & availability).
+        </p>
+      )}
     </div>
   );
 }

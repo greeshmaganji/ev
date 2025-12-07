@@ -22,53 +22,52 @@ export default function App() {
   }, []);
 
   const selectedCountry =
-    data.find(d => d.country_code === selectedCode) || null;
+    data.find((d) => d.country_code === selectedCode) || null;
 
   return (
     <Layout>
-      <div className="mb-4 rounded-xl bg-white/80 p-4 shadow-sm">
-        <h1 className="text-3xl font-bold mb-1">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold flex items-center gap-2">
           🌍 Global EV Readiness & Gap Dashboard (2025)
         </h1>
-        <p className="text-sm text-gray-700">
-          Explore EV readiness (EIRI), model availability & demand–infrastructure gaps.
-          Click markers or bars to see country details ➜
+        <p className="text-sm text-gray-700 mt-1">
+          Explore EV readiness (EIRI), model availability, and
+          demand–infrastructure gaps. Click markers or bars to see
+          country-level details ➜
         </p>
       </div>
 
-      {data.length === 0 ? (
-        <div className="mt-10 text-center text-gray-500">Loading data…</div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          
-          {/* LEFT SIDE — Map + Charts */}
-          <div className="lg:col-span-2 space-y-4">
-
-            {/* MAP CARD — FIXED HEIGHT */}
-            <div className="rounded-xl bg-white shadow p-4"
-                 style={{ height: 400, overflow: "hidden" }}>
-              <h2 className="text-lg font-semibold mb-2">
-                Global Readiness Map
-              </h2>
-
-              {/* THIS MUST HAVE HEIGHT — critical */}
-              <div style={{ height: 340, border: "1px solid #e5e7eb" }}>
-                <MapView data={data} onSelectCountry={setSelectedCode} />
-              </div>
+      {/* Main layout: left = visuals, right = country detail */}
+      <div className="flex flex-col lg:flex-row gap-4">
+        {/* LEFT: map + charts */}
+        <div className="flex-1 space-y-4">
+          <div className="bg-white rounded-xl shadow p-4">
+            <h2 className="font-semibold mb-2">Global Readiness Map</h2>
+            <div style={{ height: 380 }}>
+              <MapView data={data} onSelectCountry={setSelectedCode} />
             </div>
-
-            {/* CHARTS */}
-            <div className="rounded-xl bg-white shadow p-4">
-              <Charts data={data} onSelectCountry={setSelectedCode} />
-            </div>
+            <p className="mt-2 text-xs text-gray-600">
+              Marker color:{" "}
+              <span className="font-semibold text-green-600">Green</span> =
+              high readiness (EIRI ≥ 70),{" "}
+              <span className="font-semibold text-orange-500">Orange</span> =
+              medium (40–69),{" "}
+              <span className="font-semibold text-red-500">Red</span> = low
+              (&lt; 40).
+            </p>
           </div>
 
-          {/* RIGHT SIDE — Details */}
-          <div className="lg:col-span-1">
-            <CountryDetail country={selectedCountry} />
+          <div className="bg-white rounded-xl shadow p-4">
+            <Charts data={data} onSelectCountry={setSelectedCode} />
           </div>
         </div>
-      )}
+
+        {/* RIGHT: sticky country details */}
+        <div className="w-full lg:w-80 xl:w-96 lg:sticky lg:top-4 self-start">
+          <CountryDetail country={selectedCountry} />
+        </div>
+      </div>
     </Layout>
   );
 }
