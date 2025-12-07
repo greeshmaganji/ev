@@ -28,72 +28,81 @@ export default function Charts({ data, onSelectCountry }) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {/* Top 15 by EIRI */}
-      <div>
-        <h3 className="font-semibold mb-2 text-sm">
-          Top 15 Countries by EIRI
-        </h3>
-        <div style={{ height: 220 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={top15Eiri}
-              layout="vertical"
-              margin={{ left: 40, right: 10, top: 5, bottom: 5 }}
-            >
-              <XAxis type="number" />
-              <YAxis
-                type="category"
-                dataKey="country_code"
-                width={50}
-                tick={{ fontSize: 11 }}
-              />
-              <Tooltip />
-              <Bar
-                dataKey="EIRI"
-                onClick={d =>
-                  onSelectCountry(d?.payload?.country_code ?? null)
-                }
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <div>
+          <h3 className="font-semibold mb-2 text-sm">
+            Top 15 Countries by EV Readiness (EIRI)
+          </h3>
+      <div style={{ height: 260 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={top15Eiri}
+            margin={{ top: 10, right: 10, left: 0, bottom: 60 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="country_code"
+              angle={-45}
+              textAnchor="end"
+              height={60}
+              tick={{ fontSize: 10 }}
+            />
+            <YAxis />
+            <Tooltip
+              formatter={(value) => value.toFixed(1)}
+              labelFormatter={(code) => `Country: ${code}`}
+            />
+
+            <Bar
+              dataKey="EIRI"
+              onClick={handleBarClick}
+              cursor="pointer"
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
+    </div>
+
 
       {/* Top 10 by positive gap */}
-      <div>
-        <h3 className="font-semibold mb-2 text-sm">
-          Top 10 Demand-Ahead Gaps (Availability &gt; Infra)
-        </h3>
-        <div style={{ height: 220 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={top10Gap}
-              layout="vertical"
-              margin={{ left: 40, right: 10, top: 5, bottom: 5 }}
-            >
-              <XAxis type="number" />
-              <YAxis
-                type="category"
-                dataKey="country_code"
-                width={50}
-                tick={{ fontSize: 11 }}
-              />
-              <Tooltip />
-              <Bar
-                dataKey="gap_value"
-                onClick={d =>
-                  onSelectCountry(d?.payload?.country_code ?? null)
-                }
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+          <div>
+      <h3 className="font-semibold mb-2 text-sm">
+        Top 10 Demand-Ahead Gaps (Models &gt; Infrastructure)
+      </h3>
+      <div style={{ height: 260 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={top10Gaps}
+            margin={{ top: 10, right: 10, left: 0, bottom: 60 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="country_code"
+              angle={-45}
+              textAnchor="end"
+              height={60}
+              tick={{ fontSize: 10 }}
+            />
+            <YAxis />
+            <Tooltip
+              formatter={(value) => value.toFixed(1)}
+              labelFormatter={(code) => `Country: ${code}`}
+            />
+            <Bar
+              dataKey="gap_value"
+              onClick={handleBarClick}
+              cursor="pointer"
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
+    </div>
+
 
       {/* Scatter: EIRI vs Availability */}
-      <div className="md:col-span-2">
-        <h3 className="font-semibold mb-2 text-sm">
-          EIRI vs EV Model Availability
-        </h3>
+      <h3 className="font-semibold mb-2 text-sm">
+  EIRI vs EV Model Availability (All Countries)
+</h3>
+
         <div style={{ height: 260 }}>
           <ResponsiveContainer width="100%" height="100%">
             <ScatterChart>

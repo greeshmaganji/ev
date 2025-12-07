@@ -37,19 +37,23 @@ export default function CountryDetail({ country }) {
   const name = country.country || country.country_code;
 
   return (
-    <div className="rounded-xl bg-white shadow p-4 text-sm text-gray-800">
-      <h2 className="text-lg font-semibold mb-1">{name}</h2>
+    <div className="rounded-xl bg-white shadow-lg p-4 text-sm text-gray-800 border border-slate-100">
+      <h2 className="text-lg font-semibold mb-1">
+        {name}
+      </h2>
       <p className="text-xs text-gray-500 mb-3">
-        Code: {country.country_code}
+        Country code: {country.country_code}
       </p>
-
-      <div className="space-y-2">
+  
+      <div className="space-y-2 mb-3">
         <div className="flex justify-between">
           <span className="font-medium">EIRI score</span>
           <span>{formatNumber(country.EIRI)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="font-medium">Gap (availability − readiness)</span>
+          <span className="font-medium">
+            Gap (availability − readiness)
+          </span>
           <span>{formatNumber(country.gap_value)}</span>
         </div>
         <div className="flex justify-between">
@@ -69,13 +73,24 @@ export default function CountryDetail({ country }) {
           <span>{formatNumber(country.capacity_norm)}</span>
         </div>
       </div>
-
-      {country.cluster != null && (
-        <p className="mt-3 text-xs text-gray-600">
-          Cluster: <b>{country.cluster}</b> (data-driven grouping of similar
-          readiness & availability).
+  
+      {/* STORY TEXT */}
+      <div className="mt-2 text-xs text-gray-700">
+        <p className="font-semibold mb-1">Interpretation</p>
+        <p>
+          {country.gap_value > 0
+            ? "Demand (EV models) is ahead of infrastructure in this country – potential pressure on charging deployment."
+            : country.gap_value < 0
+            ? "Infrastructure is ahead of model availability – room for OEMs to expand EV offerings."
+            : "Demand and infrastructure are roughly balanced based on this index."}
         </p>
-      )}
+        {country.cluster != null && (
+          <p className="mt-1">
+            Cluster: <b>{country.cluster}</b> (data-driven group based on readiness and availability).
+          </p>
+        )}
+      </div>
     </div>
   );
+  
 }

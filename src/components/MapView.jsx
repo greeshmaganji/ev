@@ -84,13 +84,16 @@ export default function MapView({ data, onSelectCountry }) {
           >
             <Tooltip>
               <div className="text-xs">
-                <div className="font-semibold">
+                <div className="font-semibold mb-1">
                   {row.country || row.country_code}
                 </div>
-                <div>EIRI: {row.EIRI?.toFixed(1) ?? "N/A"}</div>
-                <div>Gap: {row.gap_value?.toFixed(1) ?? "N/A"}</div>
+                <div>Readiness (EIRI): {row.EIRI?.toFixed(1) ?? "N/A"}</div>
+                <div>
+                  Gap (Models − Infra): {row.gap_value?.toFixed(1) ?? "N/A"}
+                </div>
               </div>
             </Tooltip>
+
           </CircleMarker>
         );
       })}
